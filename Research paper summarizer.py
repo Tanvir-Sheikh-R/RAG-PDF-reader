@@ -15,11 +15,15 @@ st.title('Paper Summarizer',text_alignment='center')
 
 st.header('Enter the paper you want to know about', width='stretch')
 
-paper_title = st.selectbox(label='Select paper title', options=['Attention is all you need', 'Prompt Engineering by Google x google', 'RAG for Knowledge-Intensive NLP Tasks'])
+paper_title = st.selectbox(label='Select paper title', options=['Attention is all you need', 
+                                                                'Deep Residual Learning for Image Recognition (ResNet, 2016)', 
+                                                                'RAG for Knowledge-Intensive NLP Tasks', 
+                                                                'Training Language Models to Follow Instructions with Human Feedback (InstructGPT, 2022)'
+                                                                ])
 
 style = st.selectbox(label='Style', options=['Math Oriented', 'Casual', 'Coding Oriented'])
 
-size = st.selectbox(label='Context Size', options=['Large', 'Mediam', 'Small'])
+size = st.selectbox(label='Context Size', options=['Large (detailed Explained)', 'Mediam (3-5 Paragraph)', 'Short (1-2 Paragraph)'])
 
 
 tamplate = PromptTemplate(
@@ -39,14 +43,14 @@ tamplate = PromptTemplate(
         validate_template=True
     )
 
-prompt = tamplate.invoke({
-        'paper_title': paper_title,
-        'style': style,
-        'size': size
-    })
-
 if st.button('Summerize', type='primary'):
     with st.spinner('Generating...'):
-        responce = llm.invoke(prompt)
-        st.write(responce.content)
+
+        chain = tamplate | llm
+        response = chain.invoke({
+            'paper_title': paper_title,
+            'style': style,
+            'size': size
+        })
+        st.write(response.content)
 
