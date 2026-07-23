@@ -1,6 +1,8 @@
 import streamlit as st
 from langchain_groq import ChatGroq
 from langchain_core.prompts import PromptTemplate
+from langchain_core.output_parsers import StrOutputParser
+from langchain_core.runnables import RunnableParallel
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -43,6 +45,8 @@ tamplate = PromptTemplate(
         validate_template=True
     )
 
+
+
 if st.button('Summerize', type='primary'):
     with st.spinner('Generating...'):
 
@@ -53,4 +57,10 @@ if st.button('Summerize', type='primary'):
             'size': size
         })
         st.write(response.content)
+
+        
+
+
+
+
 
