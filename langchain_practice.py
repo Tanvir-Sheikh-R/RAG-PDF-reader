@@ -53,3 +53,50 @@ get_feedback = RunnableBranch(
 
 chain = sentiment_chain | get_feedback
 
+
+
+
+
+# Implementing a PineCode vector store
+
+from langchain_chroma import Chroma
+from langchain_huggingface import HuggingFaceEmbeddings
+
+from langchain_core.documents import Document
+
+
+doc1 = Document(
+    page_content="Sakib-al-hasan in an all rounder in bangladesh cricket team",
+    metadata = {'team': 'bangladesh'}
+)
+
+doc2 = Document(
+    page_content="Mehidi hasan in a batter in bangladesh cricket team",
+    metadata = {'team': 'bangladesh'}
+)
+
+doc3 = Document(
+    page_content="Taskin in a bowler in bangladesh cricket team",
+    metadata = {'team': 'bangladesh'}
+)
+
+docs = [doc1, doc2, doc3]
+
+embedding = HuggingFaceEmbeddings(
+    model_name = "BAAI/bge-small-en-v1.5"
+)
+
+vectorstore = Chroma.from_documents(
+    persist_directory="vector_store",
+    collection_name='Temp',
+    documents=docs, 
+    embedding=embedding)
+
+
+
+get_query  = vectorstore.similarity_search_with_score(
+    query="best batter",
+    k = 2
+)
+
+print(get_query)
