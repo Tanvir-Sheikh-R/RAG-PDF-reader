@@ -1,0 +1,1 @@
+Pdf reader in a simplier form just drag and fetch data
